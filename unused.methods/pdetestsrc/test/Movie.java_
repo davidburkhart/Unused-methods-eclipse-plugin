@@ -1,0 +1,9 @@
+package test;
+
+public class Movie {
+
+	public Actor getMainActor() {
+		new Actor().playsIn(this);
+		return null;
+	}
+}

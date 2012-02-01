@@ -1,0 +1,19 @@
+package test;
+
+
+public class Actor {
+
+	public static void main(String[] args) {
+		// main methods are ignored!
+	}
+
+	public void lonelyMethod() {
+	}
+
+	public static void lonelyStaticMethod() {
+	}
+
+	boolean playsIn(Movie movie) {
+		return movie.getMainActor() == this;
+	}
+}
