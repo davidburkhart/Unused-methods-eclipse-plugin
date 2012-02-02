@@ -13,36 +13,16 @@
        </persistent>
     </extension>
    <extension
-         point="org.eclipse.ui.commands">
-      <command
-            defaultHandler="unused.methods.FindUnusedMethodsHandler"
-            id="unused.methods.FindUnusedMethodsCommand"
-            name="Find unused methods">
-      </command>
-      <command
-            defaultHandler="unused.methods.ClearProblemMarkersHandler"
-            id="unused.methods.ClearProblemMarkersCommand"
-            name="Clear unused methods problem markers">
-      </command>
-   </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="toolbar:org.eclipse.ui.main.toolbar">
-         <toolbar
-               id="unused.methods.toolbar">
-            <command
-                  commandId="unused.methods.FindUnusedMethodsCommand"
-                  label="Find unused methods"
-                  style="push">
-            </command>
-            <command
-                  commandId="unused.methods.ClearProblemMarkersCommand"
-                  label="Clear Problem Markers"
-                  style="push">
-            </command>
-         </toolbar>
-      </menuContribution>
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="unused.methods.FindUnusedMethodsInJavaProjectContribution"
+            objectClass="org.eclipse.jdt.core.IJavaProject">
+         <action
+               class="unused.methods.FindAndMarkUnusedMethodsInJavaProject"
+               id="unused.methods.FindUnusedMethodsInJavaProject"
+               label="Find Unused Methods">
+         </action>
+      </objectContribution>
    </extension>
 </plugin>

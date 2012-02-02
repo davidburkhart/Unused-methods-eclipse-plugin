@@ -11,11 +11,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaCore;
 
-class UnusedMethodsMarker {
+public class UnusedMethodsMarker {
 
 	private static final String UNUSED_METHODS_MARKER = "unused.methods.marker";
 
-	static void on(IMethod method) {
+	public static void on(IMethod method) {
 		try {
 			addMarker(method);
 		} catch (CoreException ex) {
@@ -23,7 +23,7 @@ class UnusedMethodsMarker {
 		}
 	}
 
-	static void clear(IWorkspaceRoot resource) {
+	public static void clear(IWorkspaceRoot resource) {
 		try {
 			resource.deleteMarkers(UNUSED_METHODS_MARKER, false, DEPTH_INFINITE);
 		} catch (CoreException e) {
