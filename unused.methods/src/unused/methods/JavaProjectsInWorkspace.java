@@ -8,24 +8,10 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
 
-public class ScanWorkspaceForUsesOf {
+class JavaProjectsInWorkspace {
 
-	private final DeclaredMethods methods;
-
-	public ScanWorkspaceForUsesOf(DeclaredMethods methods) {
-		this.methods = methods;
-	}
-
-	public void removeUsedMethods() throws JavaModelException {
-		List<IJavaProject> allJavaProjects = collectAllJavaProjects();
-		for (IJavaProject javaProject : allJavaProjects) {
-			new JavaAstParser(javaProject).accept(new RemoveUsedMethodsFrom(methods));
-		}
-	}
-
-	private List<IJavaProject> collectAllJavaProjects() {
+	List<IJavaProject> collectAllJavaProjects() {
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		List<IJavaProject> javaProjects = new LinkedList<IJavaProject>();
 		for (IProject project : projects) {

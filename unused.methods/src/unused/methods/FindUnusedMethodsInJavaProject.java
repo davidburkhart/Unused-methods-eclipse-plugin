@@ -12,7 +12,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.dom.ASTVisitor;
 
 public class FindUnusedMethodsInJavaProject extends Job {
 
@@ -28,7 +27,7 @@ public class FindUnusedMethodsInJavaProject extends Job {
 	protected IStatus run(IProgressMonitor monitor) {
 		try {
 
-			findUnusedMethods();
+			findUnusedMethods(monitor);
 
 		} catch (JavaModelException e) {
 			String pluginId = UnusedMethodsPlugin.getDefault().getBundle().getSymbolicName();
@@ -38,15 +37,26 @@ public class FindUnusedMethodsInJavaProject extends Job {
 		return Status.OK_STATUS;
 	}
 
-	void findUnusedMethods() throws JavaModelException {
+	void findUnusedMethods(IProgressMonitor monitor) throws JavaModelException {
 		DeclaredMethods methods = new DeclaredMethods();
 		methods.addFilter(new DoNotAcceptAnnotation("org.junit.Test"));
 		methods.addFilter(new DoNotAcceptMethodsOverridingBinary());
+		List<IJavaProject> allJavaProjects = new JavaProjectsInWorkspace().collectAllJavaProjects();
 
-		ASTVisitor visitor = new AddDeclaredMethodsTo(methods);
-		new JavaAstParser(project).accept(visitor);
+		int totalWork = 1 + allJavaProjects.size();
+		monitor.beginTask("Searching for unused methods", totalWork);
 
-		new ScanWorkspaceForUsesOf(methods).removeUsedMethods();
+		monitor.subTask("Collecting declared methods from " + project.getElementName());
+		new JavaAstParser(project).accept(new AddDeclaredMethodsTo(methods));
+		monitor.worked(1);
+
+		for (IJavaProject javaProject : allJavaProjects) {
+			monitor.subTask("Removing methods used by " + project.getElementName());
+			new JavaAstParser(javaProject).accept(new RemoveUsedMethodsFrom(methods));
+			monitor.worked(1);
+		}
+
+		monitor.done();
 
 		unusedMethods = methods.getMethods();
 	}
