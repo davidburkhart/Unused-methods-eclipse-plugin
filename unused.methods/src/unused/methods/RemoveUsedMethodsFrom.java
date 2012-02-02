@@ -48,8 +48,6 @@ public class RemoveUsedMethodsFrom extends ASTVisitor {
 
 	private void addToUsedMethods(IMethodBinding binding, ASTNode node) {
 		if (binding == null) {
-			UnusedMethodsPlugin.getDefault().info(
-					"UnusedMethodsCollector.addToUsedMethods() null-binding for node:" + node);
 			return;
 		}
 
@@ -59,9 +57,6 @@ public class RemoveUsedMethodsFrom extends ASTVisitor {
 			// or calls to default constructor when default constructor isn't
 			// declared explicitly
 			// or on values() or valueOf() methods of enums
-			UnusedMethodsPlugin.getDefault().info(
-					"UnusedMethodsCollector.addToUsedMethods() binding not a method binding, node:" + node
-							+ " javaElement:" + javaElement);
 			return;
 		}
 
