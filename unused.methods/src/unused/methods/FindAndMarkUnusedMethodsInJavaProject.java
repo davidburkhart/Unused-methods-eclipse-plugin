@@ -28,6 +28,7 @@ public class FindAndMarkUnusedMethodsInJavaProject extends Action implements IOb
 		return new JobChangeAdapter() {
 			@Override
 			public void done(IJobChangeEvent event) {
+				UnusedMethodsMarker.clear(project.getResource());
 				List<IMethod> unusedMethods = findUnusedMethods.getUnusedMethods();
 				for (IMethod method : unusedMethods) {
 					UnusedMethodsMarker.on(method);

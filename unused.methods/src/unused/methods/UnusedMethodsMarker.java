@@ -6,7 +6,7 @@ import static org.eclipse.core.resources.IMarker.SEVERITY_WARNING;
 import static org.eclipse.core.resources.IResource.DEPTH_INFINITE;
 
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaCore;
@@ -23,7 +23,7 @@ public class UnusedMethodsMarker {
 		}
 	}
 
-	public static void clear(IWorkspaceRoot resource) {
+	public static void clear(IResource resource) {
 		try {
 			resource.deleteMarkers(UNUSED_METHODS_MARKER, false, DEPTH_INFINITE);
 		} catch (CoreException e) {
