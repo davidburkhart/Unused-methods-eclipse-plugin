@@ -12,6 +12,7 @@ public class MethodWithBinding {
 
 	private final IMethodBinding binding;
 	private final IMethod method;
+	private List<IMethodBinding> overriddenMethods;
 
 	public MethodWithBinding(IMethodBinding binding, IMethod method) {
 		this.binding = binding;
@@ -41,12 +42,14 @@ public class MethodWithBinding {
 	}
 
 	public List<IMethodBinding> findThisAndOverriddenMethods() {
-		List<IMethodBinding> result = new LinkedList<IMethodBinding>();
-		IMethodBinding overriddenMethod = Bindings.findOverriddenMethod(binding, true);
-		while (overriddenMethod != null) {
-			result.add(overriddenMethod);
-			overriddenMethod = Bindings.findOverriddenMethod(overriddenMethod, true);
+		if (overriddenMethods == null) {
+			overriddenMethods = new LinkedList<IMethodBinding>();
+			IMethodBinding overriddenMethod = Bindings.findOverriddenMethod(binding, true);
+			while (overriddenMethod != null) {
+				overriddenMethods.add(overriddenMethod);
+				overriddenMethod = Bindings.findOverriddenMethod(overriddenMethod, true);
+			}
 		}
-		return result;
+		return overriddenMethods;
 	}
 }
