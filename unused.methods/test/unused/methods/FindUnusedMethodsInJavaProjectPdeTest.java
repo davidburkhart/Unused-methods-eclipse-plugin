@@ -37,7 +37,7 @@ public class FindUnusedMethodsInJavaProjectPdeTest extends PdeTestCaseWithTestPr
 
 	private List<IMethod> calculateUnusedMethods() throws JavaModelException {
 		FindUnusedMethodsInJavaProject finder = new FindUnusedMethodsInJavaProject(project.asJavaProject());
-		finder.findUnusedMethods(new NullProgressMonitor());
+		finder.run(new NullProgressMonitor());
 		return finder.getUnusedMethods();
 	}
 }
