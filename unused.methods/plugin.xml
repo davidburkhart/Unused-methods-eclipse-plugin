@@ -24,5 +24,15 @@
                label="Find Unused Methods">
          </action>
       </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="unused.methods.ClearUnusedMethodMarkersContribution"
+            objectClass="org.eclipse.jdt.core.IJavaElement">
+         <action
+               class="unused.methods.ClearUnusedMethodMarkers"
+               id="unused.methods.ClearUnusedMethodMarkers"
+               label="Clear Unused Methods Markers">
+         </action>
+      </objectContribution>
    </extension>
 </plugin>
