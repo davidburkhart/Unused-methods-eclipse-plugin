@@ -15,25 +15,15 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Test;
 
-public class FindUnusedMethodsInJavaProjectPdeTest extends PdeTestCaseWithTestProject {
+public class FindUnusedContructorsPdeTest extends PdeTestCaseWithTestProject {
 
 	@Test
-	public void findUnusedMethodsInProject() throws CoreException, IOException {
-		// TODO separate Tests (static/nonstatic, used/unused)
+	public void findUnusedConstructorsInProject() throws CoreException, IOException {
 		List<IMethod> result = calculateUnusedMethods();
-		assertThat(result, not(hasItem(methodWithName("main"))));
-		assertThat(result, not(hasItem(methodWithName("playsIn"))));
-		assertThat(result, not(hasItem(methodWithName("getMainActor"))));
-		assertThat(result, hasItem(methodWithName("lonelyMethod")));
-		assertThat(result, hasItem(methodWithName("lonelyStaticMethod")));
-		assertThat(result.size(), is(2));
+		assertThat(result, not(hasItem(methodWithName("SuperClassWithExplicitlyUsedConstructor"))));
+		assertThat(result, hasItem(methodWithName("SuperClassWithUnusedConstructor")));
+		assertThat(result.size(), is(1));
 	}
-
-	// TODO test inheritance
-	// TODO test interfaces
-	// TODO test constructors
-	// TODO test enums
-	// TODO test anonymous classes
 
 	private List<IMethod> calculateUnusedMethods() throws JavaModelException {
 		FindUnusedMethodsInJavaProject finder = new FindUnusedMethodsInJavaProject(project.asJavaProject());
@@ -43,6 +33,7 @@ public class FindUnusedMethodsInJavaProjectPdeTest extends PdeTestCaseWithTestPr
 
 	@Override
 	protected String[] getTestFiles() {
-		return new String[] { "/test/Movie.java", "/test/Actor.java" };
+		return new String[] { "/test/SuperClassWithExplicitlyUsedConstructor.java",
+				"/test/SuperClassWithUnusedConstructor.java" };
 	}
 }

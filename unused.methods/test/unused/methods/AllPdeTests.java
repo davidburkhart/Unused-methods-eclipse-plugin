@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ FindUnusedMethodsInJavaProjectPdeTest.class })
+@SuiteClasses({ FindUnusedMethodsInJavaProjectPdeTest.class, FindUnusedContructorsPdeTest.class })
 // TODO test Markers
 public class AllPdeTests {
 

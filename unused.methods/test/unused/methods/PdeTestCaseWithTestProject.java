@@ -10,7 +10,7 @@ import org.junit.Rule;
  * Do not use classes from jdt in example code as no jre or classpath is set up
  * in test project!!!
  */
-public class PdeTestCaseWithTestProject {
+public abstract class PdeTestCaseWithTestProject {
 
 	@Rule
 	public ProjectInWorkspace project = new ProjectInWorkspace().withJavaNature();
@@ -19,8 +19,12 @@ public class PdeTestCaseWithTestProject {
 	public void createTestJavaProject() throws CoreException, IOException {
 		project.createFolder("src");
 		project.createFolder("src/test");
-		project.createFile("src/test/Movie.java", new ResourceAsString("/test/Movie.java_").read());
-		project.createFile("src/test/Actor.java", new ResourceAsString("/test/Actor.java_").read());
+		for (String file : getTestFiles()) {
+			project.createFile("src" + file, new ResourceAsString(file + "_").read());
+		}
 		project.asJavaProject();
 	}
+
+	protected abstract String[] getTestFiles();
+
 }
