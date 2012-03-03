@@ -1,5 +1,6 @@
 package unused.methods.core;
 
+import static org.eclipse.core.resources.IMarker.LINE_NUMBER;
 import static org.eclipse.core.resources.IMarker.MESSAGE;
 import static org.eclipse.core.resources.IMarker.SEVERITY;
 import static org.eclipse.core.resources.IMarker.SEVERITY_WARNING;
@@ -10,6 +11,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 
 public class UnusedMethodsMarker {
 
@@ -37,6 +39,24 @@ public class UnusedMethodsMarker {
 			JavaCore.getJavaCore().configureJavaElementMarker(marker, method);
 			marker.setAttribute(MESSAGE, "Method " + method.getElementName() + " is not used.");
 			marker.setAttribute(SEVERITY, SEVERITY_WARNING);
+			marker.setAttribute(LINE_NUMBER, findLine(method));
 		}
+	}
+
+	private static int findLine(IMethod method) throws JavaModelException {
+		String sourceOfCompilationUnit = method.getCompilationUnit().getSource();
+		int offsetInCharacters = method.getSourceRange().getOffset();
+		String linesBeforeMethod = sourceOfCompilationUnit.substring(0, offsetInCharacters);
+		return countLines(linesBeforeMethod);
+	}
+
+	private static int countLines(String text) {
+		int countLines = 1;
+		for (int i = 0; i < text.length(); i++) {
+			if (text.charAt(i) == '\n') {
+				countLines++;
+			}
+		}
+		return countLines;
 	}
 }
