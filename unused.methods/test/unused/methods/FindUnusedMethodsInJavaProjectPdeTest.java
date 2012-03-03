@@ -10,9 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Test;
 
 public class FindUnusedMethodsInJavaProjectPdeTest extends PdeTestCaseWithTestProject {
@@ -34,12 +32,6 @@ public class FindUnusedMethodsInJavaProjectPdeTest extends PdeTestCaseWithTestPr
 	// TODO test constructors
 	// TODO test enums
 	// TODO test anonymous classes
-
-	private List<IMethod> calculateUnusedMethods() throws JavaModelException {
-		FindUnusedMethodsInJavaProject finder = new FindUnusedMethodsInJavaProject(project.asJavaProject());
-		finder.run(new NullProgressMonitor());
-		return finder.getUnusedMethods();
-	}
 
 	@Override
 	protected String[] getTestFiles() {

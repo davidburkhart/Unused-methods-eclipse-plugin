@@ -1,8 +1,15 @@
 package unused.methods;
 
+import static java.util.Collections.singletonList;
+
 import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Before;
 import org.junit.Rule;
 
@@ -26,5 +33,12 @@ public abstract class PdeTestCaseWithTestProject {
 	}
 
 	protected abstract String[] getTestFiles();
+
+	protected List<IMethod> calculateUnusedMethods() throws JavaModelException {
+		List<IJavaProject> projects = singletonList(project.asJavaProject());
+		FindUnusedMethodsInJavaProjects finder = new FindUnusedMethodsInJavaProjects(projects);
+		finder.run(new NullProgressMonitor());
+		return finder.getUnusedMethods();
+	}
 
 }

@@ -10,9 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Test;
 
 public class FindUnusedContructorsPdeTest extends PdeTestCaseWithTestProject {
@@ -23,12 +21,6 @@ public class FindUnusedContructorsPdeTest extends PdeTestCaseWithTestProject {
 		assertThat(result, not(hasItem(methodWithName("SuperClassWithExplicitlyUsedConstructor"))));
 		assertThat(result, hasItem(methodWithName("SuperClassWithUnusedConstructor")));
 		assertThat(result.size(), is(1));
-	}
-
-	private List<IMethod> calculateUnusedMethods() throws JavaModelException {
-		FindUnusedMethodsInJavaProject finder = new FindUnusedMethodsInJavaProject(project.asJavaProject());
-		finder.run(new NullProgressMonitor());
-		return finder.getUnusedMethods();
 	}
 
 	@Override

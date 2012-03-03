@@ -19,8 +19,8 @@
             id="unused.methods.FindUnusedMethodsInJavaProjectContribution"
             objectClass="org.eclipse.jdt.core.IJavaProject">
          <action
-               class="unused.methods.FindAndMarkUnusedMethodsInJavaProject"
-               id="unused.methods.FindUnusedMethodsInJavaProject"
+               class="unused.methods.FindAndMarkUnusedMethodsInJavaProjects"
+               id="unused.methods.FindAndMarkUnusedMethodsInJavaProjects"
                label="Find Unused Methods">
          </action>
       </objectContribution>
