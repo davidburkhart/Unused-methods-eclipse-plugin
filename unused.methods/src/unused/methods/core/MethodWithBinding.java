@@ -1,4 +1,4 @@
-package unused.methods;
+package unused.methods.core;
 
 import java.util.LinkedList;
 import java.util.List;

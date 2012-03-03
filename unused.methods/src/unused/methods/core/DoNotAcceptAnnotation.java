@@ -1,4 +1,4 @@
-package unused.methods;
+package unused.methods.core;
 
 import org.eclipse.jdt.core.dom.IAnnotationBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;

@@ -1,4 +1,4 @@
-package unused.methods;
+package unused.methods.core;
 
 import java.io.BufferedReader;
 import java.io.IOException;

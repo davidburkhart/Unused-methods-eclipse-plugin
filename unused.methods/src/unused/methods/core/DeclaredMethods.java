@@ -1,4 +1,4 @@
-package unused.methods;
+package unused.methods.core;
 
 import java.util.HashSet;
 import java.util.Iterator;

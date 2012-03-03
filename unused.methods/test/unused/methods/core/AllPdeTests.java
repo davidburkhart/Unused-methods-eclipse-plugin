@@ -1,4 +1,4 @@
-package unused.methods;
+package unused.methods.core;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

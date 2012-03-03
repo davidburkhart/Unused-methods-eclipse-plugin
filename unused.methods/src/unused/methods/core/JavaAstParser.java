@@ -1,4 +1,4 @@
-package unused.methods;
+package unused.methods.core;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;

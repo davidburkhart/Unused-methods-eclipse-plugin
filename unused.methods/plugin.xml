@@ -16,21 +16,21 @@
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="true"
-            id="unused.methods.FindUnusedMethodsInJavaProjectContribution"
+            id="unused.methods.ui.FindAndMarkUnusedMethodsInJavaProjectsContribution"
             objectClass="org.eclipse.jdt.core.IJavaProject">
          <action
-               class="unused.methods.FindAndMarkUnusedMethodsInJavaProjects"
-               id="unused.methods.FindAndMarkUnusedMethodsInJavaProjects"
+               class="unused.methods.ui.FindAndMarkUnusedMethodsInJavaProjects"
+               id="unused.methods.ui.FindAndMarkUnusedMethodsInJavaProjects"
                label="Find Unused Methods">
          </action>
       </objectContribution>
       <objectContribution
             adaptable="true"
-            id="unused.methods.ClearUnusedMethodMarkersContribution"
+            id="unused.methods.ui.ClearUnusedMethodMarkersContribution"
             objectClass="org.eclipse.jdt.core.IJavaElement">
          <action
-               class="unused.methods.ClearUnusedMethodMarkers"
-               id="unused.methods.ClearUnusedMethodMarkers"
+               class="unused.methods.ui.ClearUnusedMethodMarkers"
+               id="unused.methods.ui.ClearUnusedMethodMarkers"
                label="Clear Unused Methods Markers">
          </action>
       </objectContribution>

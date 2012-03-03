@@ -1,4 +1,4 @@
-package unused.methods;
+package unused.methods.ui;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,6 +13,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+
+import unused.methods.core.FindUnusedMethodsInJavaProjects;
+import unused.methods.core.UnusedMethodsMarker;
 
 public class FindAndMarkUnusedMethodsInJavaProjects extends Action implements IObjectActionDelegate {
 

@@ -1,4 +1,4 @@
-package unused.methods;
+package unused.methods.core;
 
 import static org.eclipse.core.runtime.IStatus.ERROR;
 import static org.eclipse.core.runtime.Status.CANCEL_STATUS;
@@ -14,6 +14,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
+
+import unused.methods.UnusedMethodsPlugin;
 
 public class FindUnusedMethodsInJavaProjects extends Job {
 

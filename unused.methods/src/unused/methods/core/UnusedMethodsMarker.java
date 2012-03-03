@@ -1,4 +1,4 @@
-package unused.methods;
+package unused.methods.core;
 
 import static org.eclipse.core.resources.IMarker.MESSAGE;
 import static org.eclipse.core.resources.IMarker.SEVERITY;

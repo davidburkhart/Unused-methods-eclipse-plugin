@@ -1,4 +1,4 @@
-package unused.methods;
+package unused.methods.core;
 
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;

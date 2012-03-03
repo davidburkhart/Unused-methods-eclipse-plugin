@@ -1,4 +1,4 @@
-package unused.methods;
+package unused.methods.core;
 
 public interface MethodFilter {
 
