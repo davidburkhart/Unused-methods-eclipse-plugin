@@ -10,6 +10,7 @@ public class Actor {
 	public void lonelyMethod() {
 	}
 
+	@Deprecated
 	public static void lonelyStaticMethod() {
 	}
 
