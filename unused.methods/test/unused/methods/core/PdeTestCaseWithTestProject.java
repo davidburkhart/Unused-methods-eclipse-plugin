@@ -13,8 +13,6 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Before;
 import org.junit.Rule;
 
-import unused.methods.core.FindUnusedMethodsInJavaProjects;
-
 /**
  * Do not use classes from jdt in example code as no jre or classpath is set up
  * in test project!!!
