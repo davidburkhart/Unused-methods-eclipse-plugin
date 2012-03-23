@@ -12,7 +12,12 @@
 	<properties>
 		<tycho-version>0.14.1</tycho-version>
 	</properties>
-
+	
+	<modules>
+		<module>../unused.methods</module>
+		<module>../unused.methods.test</module>
+	</modules>
+	
 	<build>
 		<plugins>
 			<plugin>
