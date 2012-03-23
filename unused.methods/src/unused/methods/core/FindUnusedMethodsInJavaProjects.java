@@ -23,7 +23,7 @@ public class FindUnusedMethodsInJavaProjects extends Job {
 	private List<IMethod> unusedMethods;
 
 	public FindUnusedMethodsInJavaProjects(List<IJavaProject> javaProjects) {
-		super("FindUnusedMethodsInJavaProject");
+		super("Find Unused Methods in " + projectNames(javaProjects));
 		this.javaProjects = javaProjects;
 	}
 
@@ -51,12 +51,12 @@ public class FindUnusedMethodsInJavaProjects extends Job {
 		List<IJavaProject> allJavaProjects = new JavaProjectsInWorkspace().collectAllJavaProjects();
 
 		int totalWork = javaProjects.size() + allJavaProjects.size();
-		monitor.beginTask("Searching for unused methods in " + allProjectNames(), totalWork);
+		monitor.beginTask("Searching for unused methods", totalWork);
 
 		DeclaredMethods methods = setupDeclaredMethods();
-		for (IJavaProject project : javaProjects) {
-			monitor.subTask("Collecting declared methods from " + project.getElementName());
-			new JavaAstParser(project).accept(new AddDeclaredMethodsTo(methods));
+		for (IJavaProject javaProject : javaProjects) {
+			monitor.subTask("Collecting declared methods from " + javaProject.getElementName());
+			new JavaAstParser(javaProject).accept(new AddDeclaredMethodsTo(methods));
 			monitor.worked(1);
 			if (monitor.isCanceled()) {
 				return CANCEL_STATUS;
@@ -81,15 +81,16 @@ public class FindUnusedMethodsInJavaProjects extends Job {
 
 	private IStatus errorStatus(JavaModelException e) {
 		String pluginId = UnusedMethodsPlugin.getDefault().getBundle().getSymbolicName();
-		return new Status(ERROR, pluginId, "Problem searching for unused methods in " + allProjectNames(), e);
+		String projectNames = projectNames(javaProjects);
+		return new Status(ERROR, pluginId, "Problem searching for unused methods in " + projectNames, e);
 	}
 
-	private String allProjectNames() {
+	private static String projectNames(List<IJavaProject> projects) {
 		StringBuffer javaProjectNames = new StringBuffer();
-		for (IJavaProject project : javaProjects) {
+		for (IJavaProject project : projects) {
 			javaProjectNames.append(project.getElementName()).append(",");
 		}
-		if (javaProjects.size() > 1) {
+		if (projects.size() > 1) {
 			javaProjectNames.setLength(javaProjectNames.length() - 1);
 		}
 		return javaProjectNames.toString();
