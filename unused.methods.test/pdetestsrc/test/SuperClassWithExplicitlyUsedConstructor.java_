@@ -1,0 +1,17 @@
+package test;
+
+public class SuperClassWithExplicitlyUsedConstructor {
+
+	public static void main(String args) {
+		new Subclass();
+	}
+
+	public SuperClassWithExplicitlyUsedConstructor() {
+	}
+
+	class Subclass extends SuperClassWithExplicitlyUsedConstructor {
+		Subclass() {
+			super();
+		}
+	}
+}
