@@ -1,43 +1,77 @@
 package unused.methods.core;
 
-import static org.eclipse.core.runtime.IStatus.ERROR;
 import static org.eclipse.core.runtime.Status.CANCEL_STATUS;
 import static org.eclipse.core.runtime.Status.OK_STATUS;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
 
-import unused.methods.UnusedMethodsPlugin;
-
-public class FindUnusedMethodsInJavaProjects extends Job {
+public class FindUnusedMethodsInJavaProjects {
 
 	private final List<IJavaProject> javaProjects;
+	private final IProgressMonitor monitor;
 	private List<IMethod> unusedMethods;
 
-	public FindUnusedMethodsInJavaProjects(List<IJavaProject> javaProjects) {
-		super("Find Unused Methods in " + projectNames(javaProjects));
+	public FindUnusedMethodsInJavaProjects(List<IJavaProject> javaProjects, IProgressMonitor monitor) {
 		this.javaProjects = javaProjects;
+		this.monitor = monitor;
+	}
+
+	public IStatus run() throws JavaModelException {
+		try {
+			return runIntern();
+		} catch (InterruptedException e) {
+			return CANCEL_STATUS;
+		}
+	}
+
+	private IStatus runIntern() throws JavaModelException, InterruptedException {
+		List<IJavaProject> allJavaProjects = new JavaProjectsInWorkspace().collectAllJavaProjects();
+
+		int totalWork = javaProjects.size() + allJavaProjects.size();
+		monitor.beginTask("Searching for unused methods", totalWork);
+
+		DeclaredMethods methods = collectDeclaredMethods();
+		removedUsedMethods(allJavaProjects, methods);
+		monitor.done();
+
+		unusedMethods = methods.getMethods();
+		return OK_STATUS;
+	}
+
+	private void removedUsedMethods(List<IJavaProject> allJavaProjects, DeclaredMethods methods)
+			throws JavaModelException, InterruptedException {
+		for (IJavaProject javaProject : allJavaProjects) {
+			monitor.subTask("Removing methods used by " + javaProject.getElementName());
+			new JavaAstParser(javaProject).accept(new RemoveUsedMethodsFrom(methods));
+			monitor.worked(1);
+
+			if (monitor.isCanceled()) {
+				throw new InterruptedException();
+			}
+		}
+	}
+
+	private DeclaredMethods collectDeclaredMethods() throws JavaModelException, InterruptedException {
+		DeclaredMethods methods = setupDeclaredMethods();
+		for (IJavaProject javaProject : javaProjects) {
+			monitor.subTask("Collecting declared methods from " + javaProject.getElementName());
+			new JavaAstParser(javaProject).accept(new AddDeclaredMethodsTo(methods));
+			monitor.worked(1);
+			if (monitor.isCanceled()) {
+				throw new InterruptedException();
+			}
+		}
+		return methods;
 	}
 
 	public List<IMethod> getUnusedMethods() {
-		return unusedMethods == null ? Collections.<IMethod> emptyList() : unusedMethods;
-	}
-
-	@Override
-	protected IStatus run(IProgressMonitor monitor) {
-		try {
-			return findUnusedMethods(monitor);
-		} catch (JavaModelException e) {
-			return errorStatus(e);
-		}
+		return unusedMethods;
 	}
 
 	private DeclaredMethods setupDeclaredMethods() throws JavaModelException {
@@ -45,54 +79,5 @@ public class FindUnusedMethodsInJavaProjects extends Job {
 		methods.addFilter(new DoNotAcceptAnnotation("org.junit.Test"));
 		methods.addFilter(new DoNotAcceptMethodsOverridingBinary());
 		return methods;
-	}
-
-	private IStatus findUnusedMethods(IProgressMonitor monitor) throws JavaModelException {
-		List<IJavaProject> allJavaProjects = new JavaProjectsInWorkspace().collectAllJavaProjects();
-
-		int totalWork = javaProjects.size() + allJavaProjects.size();
-		monitor.beginTask("Searching for unused methods", totalWork);
-
-		DeclaredMethods methods = setupDeclaredMethods();
-		for (IJavaProject javaProject : javaProjects) {
-			monitor.subTask("Collecting declared methods from " + javaProject.getElementName());
-			new JavaAstParser(javaProject).accept(new AddDeclaredMethodsTo(methods));
-			monitor.worked(1);
-			if (monitor.isCanceled()) {
-				return CANCEL_STATUS;
-			}
-		}
-
-		for (IJavaProject javaProject : allJavaProjects) {
-			monitor.subTask("Removing methods used by " + javaProject.getElementName());
-			new JavaAstParser(javaProject).accept(new RemoveUsedMethodsFrom(methods));
-			monitor.worked(1);
-
-			if (monitor.isCanceled()) {
-				return CANCEL_STATUS;
-			}
-		}
-
-		monitor.done();
-
-		unusedMethods = methods.getMethods();
-		return OK_STATUS;
-	}
-
-	private IStatus errorStatus(JavaModelException e) {
-		String pluginId = UnusedMethodsPlugin.getDefault().getBundle().getSymbolicName();
-		String projectNames = projectNames(javaProjects);
-		return new Status(ERROR, pluginId, "Problem searching for unused methods in " + projectNames, e);
-	}
-
-	private static String projectNames(List<IJavaProject> projects) {
-		StringBuffer javaProjectNames = new StringBuffer();
-		for (IJavaProject project : projects) {
-			javaProjectNames.append(project.getElementName()).append(",");
-		}
-		if (projects.size() > 1) {
-			javaProjectNames.setLength(javaProjectNames.length() - 1);
-		}
-		return javaProjectNames.toString();
 	}
 }

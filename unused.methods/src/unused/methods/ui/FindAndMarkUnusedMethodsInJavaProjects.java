@@ -14,7 +14,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-import unused.methods.core.FindUnusedMethodsInJavaProjects;
+import unused.methods.core.FindUnusedMethodsInJavaProjectsJob;
 import unused.methods.core.UnusedMethodsMarker;
 
 public class FindAndMarkUnusedMethodsInJavaProjects extends Action implements IObjectActionDelegate {
@@ -23,12 +23,12 @@ public class FindAndMarkUnusedMethodsInJavaProjects extends Action implements IO
 
 	@Override
 	public void run(IAction action) {
-		FindUnusedMethodsInJavaProjects findUnusedMethods = new FindUnusedMethodsInJavaProjects(javaProjects);
+		FindUnusedMethodsInJavaProjectsJob findUnusedMethods = new FindUnusedMethodsInJavaProjectsJob(javaProjects);
 		findUnusedMethods.addJobChangeListener(markUnusedMethodsWhenDone(findUnusedMethods));
 		findUnusedMethods.schedule();
 	}
 
-	private JobChangeAdapter markUnusedMethodsWhenDone(final FindUnusedMethodsInJavaProjects findUnusedMethods) {
+	private JobChangeAdapter markUnusedMethodsWhenDone(final FindUnusedMethodsInJavaProjectsJob findUnusedMethods) {
 		return new JobChangeAdapter() {
 			@Override
 			public void done(IJobChangeEvent event) {

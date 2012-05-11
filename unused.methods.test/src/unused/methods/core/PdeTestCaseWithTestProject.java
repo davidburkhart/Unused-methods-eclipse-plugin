@@ -36,7 +36,7 @@ public abstract class PdeTestCaseWithTestProject {
 
 	protected List<IMethod> calculateUnusedMethods() throws JavaModelException {
 		List<IJavaProject> projects = singletonList(project.asJavaProject());
-		FindUnusedMethodsInJavaProjects finder = new FindUnusedMethodsInJavaProjects(projects);
+		FindUnusedMethodsInJavaProjectsJob finder = new FindUnusedMethodsInJavaProjectsJob(projects);
 		finder.run(new NullProgressMonitor());
 		return finder.getUnusedMethods();
 	}
