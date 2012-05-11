@@ -27,6 +27,7 @@ public class FindUnusedMethodsInJavaProjectPdeTest extends PdeTestCaseWithTestPr
 		assertThat(result.size(), is(2));
 	}
 
+	// TODO run Test on single package
 	// TODO test inheritance
 	// TODO test interfaces
 	// TODO test constructors

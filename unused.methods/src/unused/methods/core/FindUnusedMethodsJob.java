@@ -9,20 +9,20 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
 
 import unused.methods.UnusedMethodsPlugin;
 
-public class FindUnusedMethodsInJavaProjectsJob extends Job {
+public class FindUnusedMethodsJob extends Job {
 
-	private final List<IJavaProject> javaProjects;
+	private final List<IJavaElement> elements;
 	private List<IMethod> unusedMethods;
 
-	public FindUnusedMethodsInJavaProjectsJob(List<IJavaProject> javaProjects) {
-		super("Find Unused Methods in " + projectNames(javaProjects));
-		this.javaProjects = javaProjects;
+	public FindUnusedMethodsJob(List<IJavaElement> elements) {
+		super("Find Unused Methods in " + names(elements));
+		this.elements = elements;
 	}
 
 	public List<IMethod> getUnusedMethods() {
@@ -32,7 +32,7 @@ public class FindUnusedMethodsInJavaProjectsJob extends Job {
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
 		try {
-			FindUnusedMethodsInJavaProjects finder = new FindUnusedMethodsInJavaProjects(javaProjects, monitor);
+			FindUnusedMethods finder = new FindUnusedMethods(elements, monitor);
 			IStatus resultStatus = finder.run();
 			unusedMethods = finder.getUnusedMethods();
 			return resultStatus;
@@ -43,18 +43,18 @@ public class FindUnusedMethodsInJavaProjectsJob extends Job {
 
 	private IStatus errorStatus(JavaModelException e) {
 		String pluginId = UnusedMethodsPlugin.getDefault().getBundle().getSymbolicName();
-		String projectNames = projectNames(javaProjects);
-		return new Status(ERROR, pluginId, "Problem searching for unused methods in " + projectNames, e);
+		String names = names(elements);
+		return new Status(ERROR, pluginId, "Problem searching for unused methods in " + names, e);
 	}
 
-	private static String projectNames(List<IJavaProject> projects) {
-		StringBuffer javaProjectNames = new StringBuffer();
-		for (IJavaProject project : projects) {
-			javaProjectNames.append(project.getElementName()).append(",");
+	private static String names(List<IJavaElement> elements) {
+		StringBuffer elementNames = new StringBuffer();
+		for (IJavaElement element : elements) {
+			elementNames.append(element.getElementName()).append(",");
 		}
-		if (projects.size() > 1) {
-			javaProjectNames.setLength(javaProjectNames.length() - 1);
+		if (elements.size() > 1) {
+			elementNames.setLength(elementNames.length() - 1);
 		}
-		return javaProjectNames.toString();
+		return elementNames.toString();
 	}
 }

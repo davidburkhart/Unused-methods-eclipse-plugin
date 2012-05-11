@@ -7,18 +7,19 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
 
-public class FindUnusedMethodsInJavaProjects {
+public class FindUnusedMethods {
 
-	private final List<IJavaProject> javaProjects;
+	private final List<IJavaElement> elements;
 	private final IProgressMonitor monitor;
 	private List<IMethod> unusedMethods;
 
-	public FindUnusedMethodsInJavaProjects(List<IJavaProject> javaProjects, IProgressMonitor monitor) {
-		this.javaProjects = javaProjects;
+	public FindUnusedMethods(List<IJavaElement> elements, IProgressMonitor monitor) {
+		this.elements = elements;
 		this.monitor = monitor;
 	}
 
@@ -33,7 +34,7 @@ public class FindUnusedMethodsInJavaProjects {
 	private IStatus runIntern() throws JavaModelException, InterruptedException {
 		List<IJavaProject> allJavaProjects = new JavaProjectsInWorkspace().collectAllJavaProjects();
 
-		int totalWork = javaProjects.size() + allJavaProjects.size();
+		int totalWork = elements.size() + allJavaProjects.size();
 		monitor.beginTask("Searching for unused methods", totalWork);
 
 		DeclaredMethods methods = collectDeclaredMethods();
@@ -59,9 +60,9 @@ public class FindUnusedMethodsInJavaProjects {
 
 	private DeclaredMethods collectDeclaredMethods() throws JavaModelException, InterruptedException {
 		DeclaredMethods methods = setupDeclaredMethods();
-		for (IJavaProject javaProject : javaProjects) {
-			monitor.subTask("Collecting declared methods from " + javaProject.getElementName());
-			new JavaAstParser(javaProject).accept(new AddDeclaredMethodsTo(methods));
+		for (IJavaElement element : elements) {
+			monitor.subTask("Collecting declared methods from " + element.getElementName());
+			new JavaAstParser(element).accept(new AddDeclaredMethodsTo(methods));
 			monitor.worked(1);
 			if (monitor.isCanceled()) {
 				throw new InterruptedException();

@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -14,26 +16,26 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-import unused.methods.core.FindUnusedMethodsInJavaProjectsJob;
+import unused.methods.core.FindUnusedMethodsJob;
 import unused.methods.core.UnusedMethodsMarker;
 
 public class FindAndMarkUnusedMethodsInJavaProjects extends Action implements IObjectActionDelegate {
 
-	private final List<IJavaProject> javaProjects = new LinkedList<IJavaProject>();
+	private final List<IJavaElement> elements = new LinkedList<IJavaElement>();
 
 	@Override
 	public void run(IAction action) {
-		FindUnusedMethodsInJavaProjectsJob findUnusedMethods = new FindUnusedMethodsInJavaProjectsJob(javaProjects);
+		FindUnusedMethodsJob findUnusedMethods = new FindUnusedMethodsJob(elements);
 		findUnusedMethods.addJobChangeListener(markUnusedMethodsWhenDone(findUnusedMethods));
 		findUnusedMethods.schedule();
 	}
 
-	private JobChangeAdapter markUnusedMethodsWhenDone(final FindUnusedMethodsInJavaProjectsJob findUnusedMethods) {
+	private JobChangeAdapter markUnusedMethodsWhenDone(final FindUnusedMethodsJob findUnusedMethods) {
 		return new JobChangeAdapter() {
 			@Override
 			public void done(IJobChangeEvent event) {
-				for (IJavaProject project : javaProjects) {
-					UnusedMethodsMarker.clear(project.getResource());
+				for (IJavaElement element : elements) {
+					UnusedMethodsMarker.clear(element.getResource());
 				}
 				List<IMethod> unusedMethods = findUnusedMethods.getUnusedMethods();
 				for (IMethod method : unusedMethods) {
@@ -45,16 +47,18 @@ public class FindAndMarkUnusedMethodsInJavaProjects extends Action implements IO
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		javaProjects.clear();
+		elements.clear();
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection strusel = (IStructuredSelection) selection;
 			for (Object element : strusel.toList()) {
 				if (element instanceof IJavaProject) {
-					javaProjects.add((IJavaProject) element);
+					elements.add((IJavaProject) element);
+				} else if (element instanceof IPackageFragment) {
+					elements.add((IPackageFragment) element);
 				}
 			}
 		}
-		action.setEnabled(!javaProjects.isEmpty());
+		action.setEnabled(!elements.isEmpty());
 	}
 
 	@Override

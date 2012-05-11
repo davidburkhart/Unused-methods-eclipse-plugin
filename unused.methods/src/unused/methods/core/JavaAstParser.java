@@ -2,6 +2,7 @@ package unused.methods.core;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -13,23 +14,38 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 
 public class JavaAstParser {
 
-	private final IJavaProject project;
+	private final IJavaElement element;
 
-	public JavaAstParser(IJavaProject project) {
-		this.project = project;
+	public JavaAstParser(IJavaElement project) {
+		this.element = project;
 	}
 
 	public void accept(ASTVisitor visitor) throws JavaModelException {
-		for (IPackageFragment mypackage : project.getPackageFragments()) {
-			if (mypackage.getKind() == IPackageFragmentRoot.K_SOURCE) {
-				collectMethodsFromPackage(mypackage, visitor);
-			}
-			// else would be binary...
+		if (element instanceof IJavaProject) {
+			collectMethodsFromProject((IJavaProject) element, visitor);
+		} else if (element instanceof IPackageFragment) {
+			collectMethodsFromPackage((IPackageFragment) element, visitor);
 		}
 	}
 
-	private void collectMethodsFromPackage(IPackageFragment mypackage, ASTVisitor visitor) throws JavaModelException {
-		for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
+	private void collectMethodsFromProject(IJavaProject javaProject, ASTVisitor visitor) throws JavaModelException {
+		for (IPackageFragment mypackage : javaProject.getPackageFragments()) {
+			collectMethodsFromPackage(mypackage, visitor);
+		}
+	}
+
+	private void collectMethodsFromPackage(IPackageFragment packageFragment, ASTVisitor visitor)
+			throws JavaModelException {
+		if (packageFragment.getKind() == IPackageFragmentRoot.K_BINARY) {
+			return;
+		}
+
+		collectMethodsFromSourcePackage(packageFragment, visitor);
+	}
+
+	private void collectMethodsFromSourcePackage(IPackageFragment packageFragment, ASTVisitor visitor)
+			throws JavaModelException {
+		for (ICompilationUnit unit : packageFragment.getCompilationUnits()) {
 
 			CompilationUnit compiled = parse(unit);
 			compiled.accept(visitor);

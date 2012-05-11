@@ -26,6 +26,16 @@
       </objectContribution>
       <objectContribution
             adaptable="true"
+            id="unused.methods.ui.FindAndMarkUnusedMethodsInJavaProjectsContribution"
+            objectClass="org.eclipse.jdt.core.IPackageFragment">
+         <action
+               class="unused.methods.ui.FindAndMarkUnusedMethodsInJavaProjects"
+               id="unused.methods.ui.FindAndMarkUnusedMethodsInJavaProjects"
+               label="Find Unused Methods">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
             id="unused.methods.ui.ClearUnusedMethodMarkersContribution"
             objectClass="org.eclipse.jdt.core.IJavaElement">
          <action
