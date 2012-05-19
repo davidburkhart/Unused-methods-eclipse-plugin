@@ -3,7 +3,6 @@ package unused.methods.core;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -15,7 +14,7 @@ import org.junit.Test;
 public class LineNumbersPdeTest extends PdeTestCaseWithTestProject {
 
 	@Test
-	public void findUnusedMethodsInProject() throws CoreException, IOException {
+	public void findUnusedMethodsInProject() throws CoreException {
 		List<IMethod> unusedMethods = calculateUnusedMethods();
 
 		IMethod lonelyMethod = findMethodByName(unusedMethods, "lonelyMethod");

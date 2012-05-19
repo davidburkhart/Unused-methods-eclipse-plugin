@@ -6,7 +6,6 @@ import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import static unused.methods.core.MethodWithName.methodWithName;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -16,7 +15,7 @@ import org.junit.Test;
 public class FindUnusedMethodsInJavaProjectPdeTest extends PdeTestCaseWithTestProject {
 
 	@Test
-	public void findUnusedMethodsInProject() throws CoreException, IOException {
+	public void findUnusedMethodsInProject() throws CoreException {
 		// TODO separate Tests (static/nonstatic, used/unused)
 		List<IMethod> result = calculateUnusedMethods();
 		assertThat(result, not(hasItem(methodWithName("main"))));

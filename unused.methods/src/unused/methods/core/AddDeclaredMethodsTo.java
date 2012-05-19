@@ -16,11 +16,11 @@ public class AddDeclaredMethodsTo extends ASTVisitor {
 
 	@Override
 	public boolean visit(MethodDeclaration node) {
-		addToDeclaredMethods(node.resolveBinding(), node);
+		addToDeclaredMethods(node.resolveBinding());
 		return true;
 	}
 
-	private void addToDeclaredMethods(IMethodBinding binding, MethodDeclaration node) {
+	private void addToDeclaredMethods(IMethodBinding binding) {
 		if (binding == null) {
 			// happens with main methods
 			return;

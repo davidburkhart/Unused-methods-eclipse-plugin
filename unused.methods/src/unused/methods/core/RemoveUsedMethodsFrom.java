@@ -2,7 +2,6 @@ package unused.methods.core;
 
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.ConstructorInvocation;
@@ -21,32 +20,32 @@ public class RemoveUsedMethodsFrom extends ASTVisitor {
 	@Override
 	public boolean visit(ClassInstanceCreation node) {
 		IMethodBinding binding = node.resolveConstructorBinding();
-		addToUsedMethods(binding, node);
+		addToUsedMethods(binding);
 		return true;
 	}
 
 	@Override
 	public boolean visit(ConstructorInvocation node) {
 		IMethodBinding binding = node.resolveConstructorBinding();
-		addToUsedMethods(binding, node);
+		addToUsedMethods(binding);
 		return true;
 	}
 
 	@Override
 	public boolean visit(SuperConstructorInvocation node) {
 		IMethodBinding binding = node.resolveConstructorBinding();
-		addToUsedMethods(binding, node);
+		addToUsedMethods(binding);
 		return true;
 	}
 
 	@Override
 	public boolean visit(MethodInvocation node) {
 		IMethodBinding binding = node.resolveMethodBinding();
-		addToUsedMethods(binding, node);
+		addToUsedMethods(binding);
 		return true;
 	}
 
-	private void addToUsedMethods(IMethodBinding binding, ASTNode node) {
+	private void addToUsedMethods(IMethodBinding binding) {
 		if (binding == null) {
 			return;
 		}
