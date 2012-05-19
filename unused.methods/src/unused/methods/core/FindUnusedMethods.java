@@ -75,7 +75,7 @@ public class FindUnusedMethods {
 		return unusedMethods;
 	}
 
-	private DeclaredMethods setupDeclaredMethods() throws JavaModelException {
+	private DeclaredMethods setupDeclaredMethods() {
 		DeclaredMethods methods = new DeclaredMethods();
 		methods.addFilter(new DoNotAcceptAnnotation("org.junit.Test"));
 		methods.addFilter(new DoNotAcceptMethodsOverridingBinary());
