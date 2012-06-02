@@ -14,36 +14,36 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 
 public class JavaAstParser {
 
-	private final IJavaElement element;
+	private final ASTVisitor visitor;
 
-	public JavaAstParser(IJavaElement project) {
-		this.element = project;
+	public JavaAstParser(ASTVisitor visitor) {
+		this.visitor = visitor;
 	}
 
-	public void accept(ASTVisitor visitor) throws JavaModelException {
+	public void sendVisitorTo(IJavaElement element) throws JavaModelException {
 		if (element instanceof IJavaProject) {
-			collectMethodsFromProject((IJavaProject) element, visitor);
+			collectMethodsFromProject((IJavaProject) element);
 		} else if (element instanceof IPackageFragment) {
-			collectMethodsFromPackage((IPackageFragment) element, visitor);
+			collectMethodsFromPackage((IPackageFragment) element);
 		}
 	}
 
-	private void collectMethodsFromProject(IJavaProject javaProject, ASTVisitor visitor) throws JavaModelException {
+	private void collectMethodsFromProject(IJavaProject javaProject) throws JavaModelException {
 		for (IPackageFragment mypackage : javaProject.getPackageFragments()) {
-			collectMethodsFromPackage(mypackage, visitor);
+			collectMethodsFromPackage(mypackage);
 		}
 	}
 
-	private void collectMethodsFromPackage(IPackageFragment packageFragment, ASTVisitor visitor)
+	private void collectMethodsFromPackage(IPackageFragment packageFragment)
 			throws JavaModelException {
 		if (packageFragment.getKind() == IPackageFragmentRoot.K_BINARY) {
 			return;
 		}
 
-		collectMethodsFromSourcePackage(packageFragment, visitor);
+		collectMethodsFromSourcePackage(packageFragment);
 	}
 
-	private void collectMethodsFromSourcePackage(IPackageFragment packageFragment, ASTVisitor visitor)
+	private void collectMethodsFromSourcePackage(IPackageFragment packageFragment)
 			throws JavaModelException {
 		for (ICompilationUnit unit : packageFragment.getCompilationUnits()) {
 

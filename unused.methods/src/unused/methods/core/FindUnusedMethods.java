@@ -41,7 +41,7 @@ public class FindUnusedMethods {
 			throws JavaModelException {
 		for (IJavaProject javaProject : allJavaProjects) {
 			monitor.subTask("Removing methods used by " + javaProject.getElementName());
-			new JavaAstParser(javaProject).accept(new RemoveUsedMethodsFrom(methods));
+			new JavaAstParser(new RemoveUsedMethodsFrom(methods)).sendVisitorTo(javaProject);
 			monitor.worked(1);
 
 			if (monitor.isCanceled()) {
@@ -54,7 +54,7 @@ public class FindUnusedMethods {
 		DeclaredMethods methods = setupDeclaredMethods();
 		for (IJavaElement element : elements) {
 			monitor.subTask("Collecting declared methods from " + element.getElementName());
-			new JavaAstParser(element).accept(new AddDeclaredMethodsTo(methods));
+			new JavaAstParser(new AddDeclaredMethodsTo(methods)).sendVisitorTo(element);
 			monitor.worked(1);
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
