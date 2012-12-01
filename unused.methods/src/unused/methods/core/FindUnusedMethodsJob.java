@@ -18,7 +18,7 @@ import unused.methods.UnusedMethodsPlugin;
 public class FindUnusedMethodsJob extends Job {
 
 	private final List<IJavaElement> elements;
-	private List<IMethod> unusedMethods;
+	private List<IMethod> unusedMethods = Collections.emptyList();
 
 	public FindUnusedMethodsJob(List<IJavaElement> elements) {
 		super("Find Unused Methods in " + names(elements));
@@ -26,16 +26,14 @@ public class FindUnusedMethodsJob extends Job {
 	}
 
 	public List<IMethod> getUnusedMethods() {
-		return unusedMethods == null ? Collections.<IMethod> emptyList() : unusedMethods;
+		return unusedMethods;
 	}
 
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
 		try {
-			FindUnusedMethods finder = new FindUnusedMethods(elements, monitor);
-			IStatus resultStatus = finder.run();
-			unusedMethods = finder.getUnusedMethods();
-			return resultStatus;
+			unusedMethods = new FindUnusedMethods(elements, monitor).run();
+			return Status.OK_STATUS;
 		} catch (JavaModelException e) {
 			return errorStatus(e);
 		}
