@@ -9,7 +9,6 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -19,7 +18,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import unused.methods.core.FindUnusedMethodsJob;
 import unused.methods.core.UnusedMethodsMarker;
 
-public class FindAndMarkUnusedMethodsInJavaProjects extends Action implements IObjectActionDelegate {
+public class FindAndMarkUnusedMethodsInJavaProjects implements IObjectActionDelegate {
 
 	private final List<IJavaElement> elements = new LinkedList<IJavaElement>();
 
