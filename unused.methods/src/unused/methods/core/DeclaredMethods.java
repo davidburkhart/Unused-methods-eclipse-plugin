@@ -25,6 +25,7 @@ public class DeclaredMethods {
 	}
 
 	public void remove(MethodWithBinding methodToRemove) {
+		// TODO nur key des bindings verwenden?
 		if (methods.contains(methodToRemove)) {
 			methods.remove(methodToRemove);
 		}

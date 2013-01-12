@@ -46,6 +46,10 @@ public class RemoveUsedMethodsFrom extends ASTVisitor {
 	}
 
 	private void addToUsedMethods(IMethodBinding binding) {
+
+		// TODO so besser:
+		binding = binding.getMethodDeclaration();
+
 		if (binding == null) {
 			return;
 		}
