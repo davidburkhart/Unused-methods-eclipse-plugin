@@ -1,12 +1,12 @@
 package unused.methods.core;
 
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
 
 public class FindUnusedMethods {
@@ -19,7 +19,7 @@ public class FindUnusedMethods {
 		this.monitor = monitor;
 	}
 
-	public List<IMethod> run() throws JavaModelException {
+	public Set<MethodWithBinding> run() throws JavaModelException {
 		List<IJavaProject> allJavaProjects = new JavaProjectsInWorkspace().collectAllJavaProjects();
 
 		int totalWork = elements.size() + allJavaProjects.size();
@@ -61,6 +61,10 @@ public class FindUnusedMethods {
 	private DeclaredMethods setupDeclaredMethods() {
 		DeclaredMethods methods = new DeclaredMethods();
 		methods.addFilter(new DoNotAcceptAnnotation("org.junit.Test"));
+		methods.addFilter(new DoNotAcceptAnnotation("org.junit.Before"));
+		methods.addFilter(new DoNotAcceptAnnotation("org.junit.After"));
+		methods.addFilter(new DoNotAcceptAnnotation("org.junit.BeforeClass"));
+		methods.addFilter(new DoNotAcceptAnnotation("org.junit.AfterClass"));
 		methods.addFilter(new DoNotAcceptMethodsOverridingBinary());
 		return methods;
 	}

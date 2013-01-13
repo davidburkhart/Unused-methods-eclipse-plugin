@@ -1,7 +1,5 @@
 package unused.methods.core;
 
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
@@ -33,12 +31,6 @@ public class AddDeclaredMethodsTo extends ASTVisitor {
 			return;
 		}
 
-		IJavaElement javaElement = declaration.getJavaElement();
-		if (!(javaElement instanceof IMethod)) {
-			return;
-		}
-
-		IMethod method = (IMethod) javaElement;
-		methods.addMethod(method, declaration);
+		methods.addMethod(declaration);
 	}
 }

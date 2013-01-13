@@ -4,18 +4,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jdt.core.BindingKey;
-import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 
 public class MethodWithBinding {
 
 	private final BindingKey bindingKey;
-	private final IMethod method;
 	private List<BindingKey> overriddenMethodKeys;
 
-	public MethodWithBinding(IMethodBinding binding, IMethod method, List<IMethodBinding> overriddenMethods) {
+	public MethodWithBinding(IMethodBinding binding, List<IMethodBinding> overriddenMethods) {
 		this.bindingKey = new BindingKey(binding.getKey());
-		this.method = method;
 		overriddenMethodKeys = new LinkedList<BindingKey>();
 		for (IMethodBinding overriddenMethod : overriddenMethods) {
 			String key = overriddenMethod.getMethodDeclaration().getKey();
@@ -25,10 +22,6 @@ public class MethodWithBinding {
 
 	public BindingKey getBindingKey() {
 		return bindingKey;
-	}
-
-	public IMethod getMethod() {
-		return method;
 	}
 
 	@Override
@@ -42,7 +35,12 @@ public class MethodWithBinding {
 
 	@Override
 	public int hashCode() {
-		return method.hashCode();
+		return bindingKey.toString().hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return bindingKey.toString();
 	}
 
 	public List<BindingKey> findThisAndOverriddenMethods() {

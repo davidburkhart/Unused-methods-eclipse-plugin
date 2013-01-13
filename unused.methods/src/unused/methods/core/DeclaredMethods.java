@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jdt.core.BindingKey;
-import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.internal.corext.dom.Bindings;
 
@@ -17,9 +16,9 @@ public class DeclaredMethods {
 	private final List<MethodFilter> filters = new LinkedList<MethodFilter>();
 	private final Set<MethodWithBinding> methods = new HashSet<MethodWithBinding>();
 
-	public void addMethod(IMethod method, IMethodBinding binding) {
+	public void addMethod(IMethodBinding binding) {
 		List<IMethodBinding> overriddenMethods = getOverriddenMethods(binding);
-		MethodWithBinding methodWithBinding = new MethodWithBinding(binding, method, overriddenMethods);
+		MethodWithBinding methodWithBinding = new MethodWithBinding(binding, overriddenMethods);
 		for (MethodFilter filter : filters) {
 			if (!filter.accept(binding, overriddenMethods)) {
 				return;
@@ -63,11 +62,7 @@ public class DeclaredMethods {
 		filters.add(filter);
 	}
 
-	public List<IMethod> getMethods() {
-		List<IMethod> result = new LinkedList<IMethod>();
-		for (MethodWithBinding method : methods) {
-			result.add(method.getMethod());
-		}
-		return result;
+	public Set<MethodWithBinding> getMethods() {
+		return methods;
 	}
 }

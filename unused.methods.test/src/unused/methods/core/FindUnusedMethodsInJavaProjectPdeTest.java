@@ -4,12 +4,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
-import static unused.methods.core.MethodWithName.methodWithName;
+import static unused.methods.core.MethodWithKey.methodWithKey;
 
-import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.IMethod;
 import org.junit.Test;
 
 public class FindUnusedMethodsInJavaProjectPdeTest extends PdeTestCaseWithTestProject {
@@ -17,12 +16,12 @@ public class FindUnusedMethodsInJavaProjectPdeTest extends PdeTestCaseWithTestPr
 	@Test
 	public void findUnusedMethodsInProject() throws CoreException {
 		// TODO separate Tests (static/nonstatic, used/unused)
-		List<IMethod> result = calculateUnusedMethods();
-		assertThat(result, not(hasItem(methodWithName("main"))));
-		assertThat(result, not(hasItem(methodWithName("playsIn"))));
-		assertThat(result, not(hasItem(methodWithName("getMainActor"))));
-		assertThat(result, hasItem(methodWithName("lonelyMethod")));
-		assertThat(result, hasItem(methodWithName("lonelyStaticMethod")));
+		Set<MethodWithBinding> result = calculateUnusedMethods();
+		assertThat(result, not(hasItem(methodWithKey("main"))));
+		assertThat(result, not(hasItem(methodWithKey("playsIn"))));
+		assertThat(result, not(hasItem(methodWithKey("getMainActor"))));
+		assertThat(result, hasItem(methodWithKey("Lsrc/test/Actor;.lonelyMethod()V")));
+		assertThat(result, hasItem(methodWithKey("Lsrc/test/Actor;.lonelyStaticMethod()V")));
 		assertThat(result.size(), is(2));
 	}
 
