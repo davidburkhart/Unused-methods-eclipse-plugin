@@ -1,5 +1,7 @@
 package unused.methods.core;
 
+import java.util.List;
+
 import org.eclipse.jdt.core.dom.IAnnotationBinding;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
@@ -13,7 +15,7 @@ public class DoNotAcceptAnnotation implements MethodFilter {
 	}
 
 	@Override
-	public boolean accept(MethodWithBinding method, IMethodBinding binding) {
+	public boolean accept(IMethodBinding binding, List<IMethodBinding> overriddenMethods) {
 		return !hasAnnotation(binding);
 	}
 

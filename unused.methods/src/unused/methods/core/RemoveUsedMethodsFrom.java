@@ -1,7 +1,6 @@
 package unused.methods.core;
 
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.BindingKey;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.ConstructorInvocation;
@@ -46,24 +45,7 @@ public class RemoveUsedMethodsFrom extends ASTVisitor {
 	}
 
 	private void addToUsedMethods(IMethodBinding binding) {
-
-		// TODO so besser:
-		binding = binding.getMethodDeclaration();
-
-		if (binding == null) {
-			return;
-		}
-
-		IJavaElement javaElement = binding.getJavaElement();
-		if (!(javaElement instanceof IMethod)) {
-			// this seems to happen with construction of anonymous inner classes
-			// or calls to default constructor when default constructor isn't
-			// declared explicitly
-			// or on values() or valueOf() methods of enums
-			return;
-		}
-
-		IMethod method = (IMethod) javaElement;
-		methods.removeMethod(new MethodWithBinding(binding, method));
+		IMethodBinding methodDeclaration = binding.getMethodDeclaration();
+		methods.removeMethod(new BindingKey(methodDeclaration.getKey()));
 	}
 }

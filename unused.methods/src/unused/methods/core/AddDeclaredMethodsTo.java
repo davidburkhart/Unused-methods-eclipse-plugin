@@ -21,27 +21,24 @@ public class AddDeclaredMethodsTo extends ASTVisitor {
 	}
 
 	private void addToDeclaredMethods(IMethodBinding binding) {
-
-		// TODO so besser:
-		binding = binding.getMethodDeclaration();
-
 		if (binding == null) {
 			// happens with main methods
 			return;
 		}
 
-		if (binding.getDeclaringClass().isEnum() && binding.isConstructor()) {
+		IMethodBinding declaration = binding.getMethodDeclaration();
+		if (declaration.getDeclaringClass().isEnum() && declaration.isConstructor()) {
 			// ignore enum constructors, they are hard to handle because
 			// javaElement of MethodBinding of EnumConstantDeclaration is null
 			return;
 		}
 
-		IJavaElement javaElement = binding.getJavaElement();
+		IJavaElement javaElement = declaration.getJavaElement();
 		if (!(javaElement instanceof IMethod)) {
 			return;
 		}
 
 		IMethod method = (IMethod) javaElement;
-		methods.addMethod(new MethodWithBinding(binding, method), binding);
+		methods.addMethod(method, declaration);
 	}
 }

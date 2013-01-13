@@ -6,24 +6,20 @@ import java.util.List;
 import org.eclipse.jdt.core.BindingKey;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.dom.IMethodBinding;
-import org.eclipse.jdt.internal.corext.dom.Bindings;
 
-@SuppressWarnings("restriction")
 public class MethodWithBinding {
 
 	private final BindingKey bindingKey;
 	private final IMethod method;
 	private List<BindingKey> overriddenMethodKeys;
 
-	public MethodWithBinding(IMethodBinding binding, IMethod method) {
+	public MethodWithBinding(IMethodBinding binding, IMethod method, List<IMethodBinding> overriddenMethods) {
 		this.bindingKey = new BindingKey(binding.getKey());
 		this.method = method;
 		overriddenMethodKeys = new LinkedList<BindingKey>();
-		IMethodBinding overriddenMethod = Bindings.findOverriddenMethod(binding, true);
-		while (overriddenMethod != null) {
+		for (IMethodBinding overriddenMethod : overriddenMethods) {
 			String key = overriddenMethod.getMethodDeclaration().getKey();
 			overriddenMethodKeys.add(new BindingKey(key));
-			overriddenMethod = Bindings.findOverriddenMethod(overriddenMethod, true);
 		}
 	}
 
@@ -41,7 +37,7 @@ public class MethodWithBinding {
 	}
 
 	private boolean equals(MethodWithBinding other) {
-		return method.equals(other.method);
+		return bindingKey.toString().equals(other.bindingKey.toString());
 	}
 
 	@Override
