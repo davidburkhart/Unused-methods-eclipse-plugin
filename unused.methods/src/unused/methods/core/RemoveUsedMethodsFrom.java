@@ -64,6 +64,6 @@ public class RemoveUsedMethodsFrom extends ASTVisitor {
 		}
 
 		IMethod method = (IMethod) javaElement;
-		methods.remove(new MethodWithBinding(binding, method));
+		methods.removeMethod(new MethodWithBinding(binding, method));
 	}
 }

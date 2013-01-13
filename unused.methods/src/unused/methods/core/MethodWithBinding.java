@@ -3,6 +3,7 @@ package unused.methods.core;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.jdt.core.BindingKey;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.internal.corext.dom.Bindings;
@@ -10,17 +11,24 @@ import org.eclipse.jdt.internal.corext.dom.Bindings;
 @SuppressWarnings("restriction")
 public class MethodWithBinding {
 
-	private final IMethodBinding binding;
+	private final BindingKey bindingKey;
 	private final IMethod method;
-	private List<IMethodBinding> overriddenMethods;
+	private List<BindingKey> overriddenMethodKeys;
 
 	public MethodWithBinding(IMethodBinding binding, IMethod method) {
-		this.binding = binding;
+		this.bindingKey = new BindingKey(binding.getKey());
 		this.method = method;
+		overriddenMethodKeys = new LinkedList<BindingKey>();
+		IMethodBinding overriddenMethod = Bindings.findOverriddenMethod(binding, true);
+		while (overriddenMethod != null) {
+			String key = overriddenMethod.getMethodDeclaration().getKey();
+			overriddenMethodKeys.add(new BindingKey(key));
+			overriddenMethod = Bindings.findOverriddenMethod(overriddenMethod, true);
+		}
 	}
 
-	public IMethodBinding getBinding() {
-		return binding;
+	public BindingKey getBindingKey() {
+		return bindingKey;
 	}
 
 	public IMethod getMethod() {
@@ -41,15 +49,7 @@ public class MethodWithBinding {
 		return method.hashCode();
 	}
 
-	public List<IMethodBinding> findThisAndOverriddenMethods() {
-		if (overriddenMethods == null) {
-			overriddenMethods = new LinkedList<IMethodBinding>();
-			IMethodBinding overriddenMethod = Bindings.findOverriddenMethod(binding, true);
-			while (overriddenMethod != null) {
-				overriddenMethods.add(overriddenMethod);
-				overriddenMethod = Bindings.findOverriddenMethod(overriddenMethod, true);
-			}
-		}
-		return overriddenMethods;
+	public List<BindingKey> findThisAndOverriddenMethods() {
+		return overriddenMethodKeys;
 	}
 }

@@ -21,6 +21,10 @@ public class AddDeclaredMethodsTo extends ASTVisitor {
 	}
 
 	private void addToDeclaredMethods(IMethodBinding binding) {
+
+		// TODO so besser:
+		binding = binding.getMethodDeclaration();
+
 		if (binding == null) {
 			// happens with main methods
 			return;
@@ -38,6 +42,6 @@ public class AddDeclaredMethodsTo extends ASTVisitor {
 		}
 
 		IMethod method = (IMethod) javaElement;
-		methods.addMethod(new MethodWithBinding(binding, method));
+		methods.addMethod(new MethodWithBinding(binding, method), binding);
 	}
 }

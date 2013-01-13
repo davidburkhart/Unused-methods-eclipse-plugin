@@ -1,21 +1,21 @@
 package unused.methods.core;
 
-import java.util.List;
-
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
+import org.eclipse.jdt.internal.corext.dom.Bindings;
 
 public class DoNotAcceptMethodsOverridingBinary implements MethodFilter {
 
 	@Override
-	public boolean accept(MethodWithBinding method) {
-		List<IMethodBinding> overriddenMethods = method.findThisAndOverriddenMethods();
-		for (IMethodBinding binding : overriddenMethods) {
-			if (isBinary(binding)) {
+	public boolean accept(MethodWithBinding method, IMethodBinding binding) {
+		IMethodBinding overriddenMethod = Bindings.findOverriddenMethod(binding, true);
+		while (overriddenMethod != null) {
+			if (isBinary(overriddenMethod)) {
 				return false;
 			}
+			overriddenMethod = Bindings.findOverriddenMethod(overriddenMethod, true);
 		}
 		return true;
 	}

@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.BindingKey;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 
@@ -15,16 +15,16 @@ public class DeclaredMethods {
 	private final List<MethodFilter> filters = new LinkedList<MethodFilter>();
 	private final Set<MethodWithBinding> methods = new HashSet<MethodWithBinding>();
 
-	public void addMethod(MethodWithBinding method) {
+	public void addMethod(MethodWithBinding method, IMethodBinding binding) {
 		for (MethodFilter filter : filters) {
-			if (!filter.accept(method)) {
+			if (!filter.accept(method, binding)) {
 				return;
 			}
 		}
 		methods.add(method);
 	}
 
-	public void remove(MethodWithBinding methodToRemove) {
+	public void removeMethod(MethodWithBinding methodToRemove) {
 		// TODO nur key des bindings verwenden?
 		if (methods.contains(methodToRemove)) {
 			methods.remove(methodToRemove);
@@ -34,10 +34,9 @@ public class DeclaredMethods {
 
 	private void removeOverridingMethods(MethodWithBinding methodToRemove) {
 		for (Iterator<MethodWithBinding> iterator = methods.iterator(); iterator.hasNext();) {
-			List<IMethodBinding> overriddenMethods = iterator.next().findThisAndOverriddenMethods();
-			for (IMethodBinding overriddenMethodBinding : overriddenMethods) {
-				IJavaElement javaElement = overriddenMethodBinding.getJavaElement();
-				if (javaElement != null && javaElement.equals(methodToRemove.getMethod())) {
+			List<BindingKey> overriddenMethodsBindingKeys = iterator.next().findThisAndOverriddenMethods();
+			for (BindingKey overriddenMethodBindingKey : overriddenMethodsBindingKeys) {
+				if (methodToRemove.getBindingKey().toString().equals(overriddenMethodBindingKey.toString())) {
 					iterator.remove();
 				}
 			}
