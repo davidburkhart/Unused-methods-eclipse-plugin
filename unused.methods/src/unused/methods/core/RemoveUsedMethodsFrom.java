@@ -48,17 +48,34 @@ public class RemoveUsedMethodsFrom extends ASTVisitor {
 	}
 
 	private void addToUsedMethods(IMethodBinding binding, ASTNode node) {
-		ASTNode parent = node.getParent();
-		while (!(parent instanceof MethodDeclaration)) {
-			parent = parent.getParent();
+		MethodDeclaration declaringMethod = findDeclaringMethod(node);
+		if (isStronglyIgnored(declaringMethod)) {
+			return;
 		}
-		MethodDeclaration declaringMethodDeclaration = (MethodDeclaration) parent;
-		IAnnotationBinding[] annotations = declaringMethodDeclaration.resolveBinding().getAnnotations();
-		// TODO filter by strongly ignored annotations
+		// TODO Test for filter by strongly ignored annotations
 
 		if (binding != null) {
 			IMethodBinding methodDeclaration = binding.getMethodDeclaration();
 			methods.removeMethod(new BindingKey(methodDeclaration.getKey()));
 		}
+	}
+
+	private boolean isStronglyIgnored(MethodDeclaration declaringMethod) {
+		IAnnotationBinding[] annotations = declaringMethod.resolveBinding().getAnnotations();
+		for (IAnnotationBinding annotationBinding : annotations) {
+			String qualifiedName = annotationBinding.getAnnotationType().getQualifiedName();
+			if (new UnusedMethodsPreferences().isStronglyIgnored(qualifiedName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private MethodDeclaration findDeclaringMethod(ASTNode node) {
+		ASTNode parent = node.getParent();
+		while (!(parent instanceof MethodDeclaration)) {
+			parent = parent.getParent();
+		}
+		return (MethodDeclaration) parent;
 	}
 }

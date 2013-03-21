@@ -60,11 +60,12 @@ public class FindUnusedMethods {
 
 	private DeclaredMethods setupDeclaredMethods() {
 		DeclaredMethods methods = new DeclaredMethods();
-		methods.addFilter(new DoNotAcceptAnnotation("org.junit.Test"));
-		methods.addFilter(new DoNotAcceptAnnotation("org.junit.Before"));
-		methods.addFilter(new DoNotAcceptAnnotation("org.junit.After"));
-		methods.addFilter(new DoNotAcceptAnnotation("org.junit.BeforeClass"));
-		methods.addFilter(new DoNotAcceptAnnotation("org.junit.AfterClass"));
+
+		UnusedMethodsPreferences preferences = new UnusedMethodsPreferences();
+		for (UnusedMethodAnnotationPreference preference : preferences.getPreferences()) {
+			methods.addFilter(new DoNotAcceptAnnotation(preference.getFullyQualifiedName()));
+		}
+
 		methods.addFilter(new DoNotAcceptMethodsOverridingBinary());
 		return methods;
 	}

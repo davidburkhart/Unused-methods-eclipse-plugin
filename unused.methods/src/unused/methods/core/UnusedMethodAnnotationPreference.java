@@ -20,4 +20,15 @@ public class UnusedMethodAnnotationPreference {
 	public void setStronglyIgnored(boolean stronglyIgnored) {
 		this.stronglyIgnored = stronglyIgnored;
 	}
+
+	@Override
+	public int hashCode() {
+		return fullyQualifiedName.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof UnusedMethodAnnotationPreference
+				&& fullyQualifiedName.equals(((UnusedMethodAnnotationPreference) obj).fullyQualifiedName);
+	}
 }

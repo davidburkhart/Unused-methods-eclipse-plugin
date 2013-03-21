@@ -1,7 +1,8 @@
 package unused.methods.core;
 
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -11,7 +12,7 @@ import unused.methods.UnusedMethodsPlugin;
 
 public class UnusedMethodsPreferences {
 
-	private List<UnusedMethodAnnotationPreference> preferences = new LinkedList<UnusedMethodAnnotationPreference>();
+	private Set<UnusedMethodAnnotationPreference> preferences = new HashSet<UnusedMethodAnnotationPreference>();
 
 	public UnusedMethodsPreferences() {
 		loadPreferences();
@@ -68,5 +69,14 @@ public class UnusedMethodsPreferences {
 		String fullyQualifiedName = preference.getFullyQualifiedName();
 		String stronglyIgnoredString = Boolean.valueOf(preference.isStronglyIgnored()).toString();
 		return fullyQualifiedName + ";" + stronglyIgnoredString;
+	}
+
+	public boolean isStronglyIgnored(String qualifiedName) {
+		for (UnusedMethodAnnotationPreference preference : preferences) {
+			if (preference.getFullyQualifiedName().equals(qualifiedName)) {
+				return preference.isStronglyIgnored();
+			}
+		}
+		return false;
 	}
 }
