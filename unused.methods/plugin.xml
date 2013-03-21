@@ -45,4 +45,12 @@
          </action>
       </objectContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="unused.methods.ui.UnusedMethodsPreferencePage"
+            id="unused.methods.PreferencePage"
+            name="Unused Methods">
+      </page>
+   </extension>
 </plugin>

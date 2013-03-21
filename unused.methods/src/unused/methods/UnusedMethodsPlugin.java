@@ -24,4 +24,8 @@ public class UnusedMethodsPlugin extends AbstractUIPlugin {
 	public static UnusedMethodsPlugin getDefault() {
 		return plugin;
 	}
+
+	public static String getPluginId() {
+		return plugin.getBundle().getSymbolicName();
+	}
 }

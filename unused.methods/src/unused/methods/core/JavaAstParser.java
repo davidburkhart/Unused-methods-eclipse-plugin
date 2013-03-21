@@ -34,8 +34,7 @@ public class JavaAstParser {
 		}
 	}
 
-	private void collectMethodsFromPackage(IPackageFragment packageFragment)
-			throws JavaModelException {
+	private void collectMethodsFromPackage(IPackageFragment packageFragment) throws JavaModelException {
 		if (packageFragment.getKind() == IPackageFragmentRoot.K_BINARY) {
 			return;
 		}
@@ -43,8 +42,7 @@ public class JavaAstParser {
 		collectMethodsFromSourcePackage(packageFragment);
 	}
 
-	private void collectMethodsFromSourcePackage(IPackageFragment packageFragment)
-			throws JavaModelException {
+	private void collectMethodsFromSourcePackage(IPackageFragment packageFragment) throws JavaModelException {
 		for (ICompilationUnit unit : packageFragment.getCompilationUnits()) {
 
 			CompilationUnit compiled = parse(unit);
@@ -54,7 +52,7 @@ public class JavaAstParser {
 	}
 
 	private CompilationUnit parse(ICompilationUnit unit) {
-		ASTParser parser = ASTParser.newParser(AST.JLS3);
+		ASTParser parser = ASTParser.newParser(AST.JLS4);
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		parser.setSource(unit);
 		parser.setResolveBindings(true);

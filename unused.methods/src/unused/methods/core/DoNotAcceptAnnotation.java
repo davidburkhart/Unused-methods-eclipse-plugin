@@ -20,8 +20,7 @@ public class DoNotAcceptAnnotation implements MethodFilter {
 	}
 
 	private boolean hasAnnotation(IMethodBinding binding) {
-		// TODO configurable Annotations (prefs) e.g. Spring stuff, ...
-		// TODO autocompletion dialog when adding Annotation to prefs ;-)
+		// TODO use preferences configured in UnusedMethodsPreferencePage
 		boolean hasAnnotation = false;
 		IAnnotationBinding[] annotations = binding.getAnnotations();
 		for (IAnnotationBinding annotation : annotations) {
