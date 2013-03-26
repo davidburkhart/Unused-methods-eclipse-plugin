@@ -84,7 +84,10 @@ public class RemoveUsedMethodsFrom extends ASTVisitor {
 	private List<IAnnotationBinding> collectMethodAnnotations(ASTNode node) {
 		MethodDeclaration methodDeclaration = findParent(MethodDeclaration.class, node);
 		if (methodDeclaration != null) {
-			return Arrays.asList(methodDeclaration.resolveBinding().getAnnotations());
+			IMethodBinding binding = methodDeclaration.resolveBinding();
+			if (binding != null) {
+				return Arrays.asList(binding.getAnnotations());
+			}
 		}
 		return Collections.emptyList();
 	}
