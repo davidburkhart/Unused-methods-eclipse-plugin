@@ -1,15 +1,24 @@
 package unused.methods.core;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.jdt.core.BindingKey;
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.ConstructorInvocation;
 import org.eclipse.jdt.core.dom.IAnnotationBinding;
 import org.eclipse.jdt.core.dom.IMethodBinding;
+import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.SuperConstructorInvocation;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 public class RemoveUsedMethodsFrom extends ASTVisitor {
 
@@ -48,20 +57,53 @@ public class RemoveUsedMethodsFrom extends ASTVisitor {
 	}
 
 	private void addToUsedMethods(IMethodBinding binding, ASTNode node) {
-		MethodDeclaration declaringMethod = findDeclaringMethod(node);
-		if (isStronglyIgnored(declaringMethod)) {
+		if (binding == null) {
 			return;
 		}
-		// TODO Test for filter by strongly ignored annotations
 
-		if (binding != null) {
-			IMethodBinding methodDeclaration = binding.getMethodDeclaration();
-			methods.removeMethod(new BindingKey(methodDeclaration.getKey()));
+		if (isBinary(binding)) {
+			return;
 		}
+
+		// TODO Test for filter by strongly ignored annotations
+		if (isStronglyIgnored(collectMethodAndTypAnnotations(node))) {
+			return;
+		}
+
+		IMethodBinding methodDeclaration = binding.getMethodDeclaration();
+		methods.removeMethod(new BindingKey(methodDeclaration.getKey()));
 	}
 
-	private boolean isStronglyIgnored(MethodDeclaration declaringMethod) {
-		IAnnotationBinding[] annotations = declaringMethod.resolveBinding().getAnnotations();
+	private List<IAnnotationBinding> collectMethodAndTypAnnotations(ASTNode node) {
+		List<IAnnotationBinding> annotations = new LinkedList<IAnnotationBinding>();
+		annotations.addAll(collectMethodAnnotations(node));
+		annotations.addAll(collectTypeAnnotations(node));
+		return annotations;
+	}
+
+	private List<IAnnotationBinding> collectMethodAnnotations(ASTNode node) {
+		MethodDeclaration methodDeclaration = findParent(MethodDeclaration.class, node);
+		if (methodDeclaration != null) {
+			return Arrays.asList(methodDeclaration.resolveBinding().getAnnotations());
+		}
+		return Collections.emptyList();
+	}
+
+	private List<IAnnotationBinding> collectTypeAnnotations(ASTNode node) {
+		TypeDeclaration typeDeclaration = findParent(TypeDeclaration.class, node);
+		if (typeDeclaration != null) {
+			return Arrays.asList(typeDeclaration.resolveBinding().getAnnotations());
+		}
+		return Collections.emptyList();
+	}
+
+	private boolean isBinary(IMethodBinding method) {
+		ITypeBinding declaringClass = method.getDeclaringClass();
+		IJavaElement element = declaringClass.getJavaElement();
+		return element instanceof IType && ((IType) element).isBinary();
+	}
+
+	private boolean isStronglyIgnored(Iterable<IAnnotationBinding> annotations) {
 		for (IAnnotationBinding annotationBinding : annotations) {
 			String qualifiedName = annotationBinding.getAnnotationType().getQualifiedName();
 			if (new UnusedMethodsPreferences().isStronglyIgnored(qualifiedName)) {
@@ -71,11 +113,11 @@ public class RemoveUsedMethodsFrom extends ASTVisitor {
 		return false;
 	}
 
-	private MethodDeclaration findDeclaringMethod(ASTNode node) {
+	private <T> T findParent(Class<T> clazz, ASTNode node) {
 		ASTNode parent = node.getParent();
-		while (!(parent instanceof MethodDeclaration)) {
+		while (parent != null && !(clazz.isAssignableFrom(parent.getClass()))) {
 			parent = parent.getParent();
 		}
-		return (MethodDeclaration) parent;
+		return clazz.cast(parent);
 	}
 }
