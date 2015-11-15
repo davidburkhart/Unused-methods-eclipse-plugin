@@ -1,9 +1,9 @@
 package unused.methods.core;
 
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
-import static org.junit.matchers.JUnitMatchers.hasItem;
 import static unused.methods.core.MethodWithKey.methodWithKey;
 
 import java.util.Set;
