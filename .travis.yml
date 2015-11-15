@@ -2,3 +2,7 @@ language: java
 
 jdk:
   - oraclejdk8
+
+install: mvn -DskipTests=true install
+script: mvn test integration-test
+
